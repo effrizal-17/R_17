@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selamat Ulang Tahun!</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            transition: all 0.5s;
+        }
+        .container {
+            max-width: 90%;
+            padding: 30px;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+        h1 {
+            color: #ff69b4;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+            margin-bottom: 20px;
+        }
+        .love {
+            font-size: 60px;
+            margin: 20px;
+            cursor: pointer;
+            display: inline-block;
+            transition: all 0.3s;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+        }
+        .love:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+        .love.clicked {
+            animation: explode 0.5s forwards;
+        }
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+        .btn {
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            margin: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+        }
+        .btn:hover {
+            background-color: #ff1493;
+            transform: scale(1.05);
+        }
+        .btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-option {
+            background-color: #4caf50;
+            margin: 10px;
+        }
+        .btn-option.no {
+            background-color: #f44336;
+        }
+        .typing-text {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 15px;
+            min-height: 120px;
+            text-align: left;
+            max-width: 80%;
+            white-space: pre-line;
+            background-color: rgba(0, 0, 0, 0.3);
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .hidden {
+            display: none;
+        }
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: fall 5s linear infinite;
+        }
+        input {
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 25px;
+            border: none;
+            margin: 15px;
+            width: 80%;
+            max-width: 300px;
+            background-color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 105, 180, 0.8);
+        }
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+        .cake {
+            font-size: 80px;
+            margin: 20px 0;
+            animation: float 3s ease-in-out infinite;
+            text-shadow: 0 0 20px rgba(255, 105, 180, 0.8);
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite alternate;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.2; }
+            100% { opacity: 1; }
+        }
+        .pink-text {
+            color: #ff69b4;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+            font-weight: bold;
+        }
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 10px;
+            font-size: 14px;
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 50%;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Stars -->
+    <div class="stars" id="stars"></div>
+
+    <!-- Audio untuk lagu -->
+    <audio id="lagu" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        <!-- Ganti dengan link lagu "I Like You The Most" -->
+    </audio>
+
+    <!-- Music control -->
+    <div class="music-control">
+        <button id="musicToggle" style="background:none; border:none; color:white; font-size:24px;">🔊</button>
+    </div>
+
+    <!-- Tahap 1: Pilih Love -->
+    <div class="container" id="stage1">
+        <h1>Sentuh semua LOVE nya!</h1>
+        <div class="love" id="love1" style="color: red;">❤️</div>
+        <div class="love" id="love2" style="color: white;">🤍</div>
+        <div class="love" id="love3" style="color: purple;">💜</div>
+        <button class="btn hidden" id="lanjutStage1" disabled onclick="nextStage(1)">Klik untuk lanjut...</button>
+        <p id="errorStage1" class="error-message hidden">Sentuh semua love dulu ya!</p>
+    </div>
+
+    <!-- Tahap 2: Masukkan Usia -->
+    <div class="container hidden" id="stage2">
+        <h1>Usia kamu berapa nih sekarang?</h1>
+        <input type="number" id="usia" min="1" max="120" placeholder="Masukkan usia kamu">
+        <button class="btn" onclick="simpanUsia()">Submit</button>
+        <p id="errorStage2" class="error-message hidden">Masukkan usia yang valid ya antara 1-120</p>
+    </div>
+
+    <!-- Tahap 3: Masukkan Nama -->
+    <div class="container hidden" id="stage3">
+        <h1>Aku boleh tau gak siapa nama kamu?</h1>
+        <input type="text" id="nama" placeholder="Masukkan nama kamu">
+        <div style="margin-top: 20px;">
+            <button class="btn btn-option" onclick="setNama(true)">Boleh</button>
+            <button class="btn btn-option no" onclick="setNama(false)">Nggak</button>
+        </div>
+        <p id="pesanNama" class="error-message hidden">Harus boleh dong, wleee 😜</p>
+        <p id="errorStage3" class="error-message hidden">Isi nama kamu dulu ya!</p>
+    </div>
+
+    <!-- Tahap 4: Pesan 1 -->
+    <div class="container hidden" id="stage4">
+        <div class="typing-text" id="pesan1"></div>
+        <button class="btn hidden" id="lanjut4" onclick="nextStage(4)">Klik untuk lanjut...</button>
+    </div>
+
+    <!-- Tahap 5: Pilihan Adek/Mbak -->
+    <div class="container hidden" id="stage5">
+        <h1>Kalau boleh tau, kamu itu siapa aku niihh? 😊</h1>
+        <div style="margin-top: 30px;">
+            <button class="btn btn-option" onclick="setRelationship('adek')">Adek ku</button>
+            <button class="btn btn-option no" onclick="setRelationship('mbak')">Mbak ku</button>
+        </div>
+        <p id="pesanRelationship" class="error-message hidden">Harus mau dong jadi Adek ku, hehe 😘</p>
+        <p id="errorStage5" class="error-message hidden">Pilih dulu ya!</p>
+    </div>
+
+    <!-- Tahap 6: Pesan 2 -->
+    <div class="container hidden" id="stage6">
+        <div class="typing-text" id="pesan2"></div>
+        <button class="btn hidden" id="lanjut6" onclick="nextStage(6)">Klik untuk lanjut...</button>
+    </div>
+
+    <!-- Tahap 7: Pesan 3 -->
+    <div class="container hidden" id="stage7">
+        <div class="typing-text" id="pesan3"></div>
+    </div>
+
+    <script>
+        // Variabel data
+        let nama = "";
+        let usia = 0;
+        let relationship = "adek";
+        let clickedLoves = [false, false, false];
+        let isMusicPlaying = true;
+        
+        // Inisialisasi bintang
+        createStars();
+        
+        // Mulai musik otomatis
+        document.addEventListener('DOMContentLoaded', function() {
+            const audio = document.getElementById('lagu');
+            audio.volume = 0.3;
+            
+            // Coba putar musik otomatis
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    // Autoplay dicegah, tampilkan tombol play manual
+                    console.log("Autoplay dicegah: ", error);
+                    isMusicPlaying = false;
+                    updateMusicButton();
+                });
+            }
+            
+            // Setup music toggle button
+            document.getElementById('musicToggle').addEventListener('click', toggleMusic);
+        });
+
+        // Fungsi toggle musik
+        function toggleMusic() {
+            const audio = document.getElementById('lagu');
+            if (isMusicPlaying) {
+                audio.pause();
+                isMusicPlaying = false;
+            } else {
+                audio.play();
+                isMusicPlaying = true;
+            }
+            updateMusicButton();
+        }
+        
+        // Update tampilan tombol musik
+        function updateMusicButton() {
+            const btn = document.getElementById('musicToggle');
+            btn.textContent = isMusicPlaying ? "🔊" : "🔇";
+        }
+
+        // Inisialisasi love buttons
+        document.getElementById('love1').addEventListener('click', function() {
+            if (!clickedLoves[0]) {
+                this.classList.add('clicked');
+                clickedLoves[0] = true;
+                checkLoves();
+            }
+        });
+        document.getElementById('love2').addEventListener('click', function() {
+            if (!clickedLoves[1]) {
+                this.classList.add('clicked');
+                clickedLoves[1] = true;
+                checkLoves();
+            }
+        });
+        document.getElementById('love3').addEventListener('click', function() {
+            if (!clickedLoves[2]) {
+                this.classList.add('clicked');
+                clickedLoves[2] = true;
+                checkLoves();
+            }
+        });
+        
+        // Fungsi cek semua love sudah diklik
+        function checkLoves() {
+            const allClicked = clickedLoves.every(love => love);
+            const btn = document.getElementById('lanjutStage1');
+            const error = document.getElementById('errorStage1');
+            
+            if (allClicked) {
+                btn.disabled = false;
+                btn.classList.remove('hidden');
+                error.classList.add('hidden');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('hidden');
+            }
+        }
+        
+        // Fungsi untuk pindah stage
+        function nextStage(currentStage) {
+            document.getElementById('stage' + currentStage).classList.add('hidden');
+            document.getElementById('stage' + (currentStage + 1)).classList.remove('hidden');
+            
+            // Efek ketikan untuk stage 4
+            if (currentStage + 1 === 4) {
+                typeWriter(
+                    document.getElementById('pesan1'),
+                    `hallooo ${nama}!\n\n Aku mau ngomong sesuatu nih...\n\n Boleh yaa,...?`,
+                    document.getElementById('lanjut4')
+                );
+            }
+            
+            // Efek ketikan untuk stage 6
+            if (currentStage + 1 === 6) {
+                typeWriter(
+                    document.getElementById('pesan2'),
+                    `Yeaayy!!\n\n Mulai sekarang, kamuuu adalah adekkuuu 😍🥰`,
+                    document.getElementById('lanjut6')
+                );
+            }
+            
+            // Efek ketikan untuk stage 7
+            if (currentStage + 1 === 7) {
+                typeWriter(
+                    document.getElementById('pesan3'),
+                    `Tambah dewasa aja nih Adekkuu...😊\n\n Semangat yaa tugasannya\n Jaga diri baik-baik yaa\n\n dan Jadilah adek ku yang baik 😘`,
+                    null
+                );
+                createConfetti();
+            }
+        }
+        
+        // Fungsi simpan usia
+        function simpanUsia() {
+            const inputUsia = document.getElementById('usia');
+            const error = document.getElementById('errorStage2');
+            
+            usia = parseInt(inputUsia.value);
+            if (isNaN(usia) || usia < 1 || usia > 120) {
+                error.classList.remove('hidden');
+                inputUsia.focus();
+            } else {
+                error.classList.add('hidden');
+                nextStage(2);
+            }
+        }
+        
+        // Fungsi set nama
+        function setNama(isBoleh) {
+            const inputNama = document.getElementById('nama');
+            const error = document.getElementById('errorStage3');
+            const pesan = document.getElementById('pesanNama');
+            
+            if (isBoleh) {
+                nama = inputNama.value.trim();
+                if (nama === "") {
+                    error.classList.remove('hidden');
+                    inputNama.focus();
+                } else {
+                    error.classList.add('hidden');
+                    nextStage(3);
+                }
+            } else {
+                pesan.classList.remove('hidden');
+                // Tidak lanjut ke stage berikutnya jika memilih "Nggak"
+                // User harus memilih "Boleh" untuk melanjutkan
+            }
+        }
+        
+        // Fungsi set relationship
+        function setRelationship(choice) {
+            const error = document.getElementById('errorStage5');
+            const pesan = document.getElementById('pesanRelationship');
+            
+            if (choice === 'adek') {
+                relationship = 'adek';
+                error.classList.add('hidden');
+                pesan.classList.add('hidden');
+                nextStage(5);
+            } else {
+                pesan.classList.remove('hidden');
+                // Tidak lanjut ke stage berikutnya jika memilih "Mbak ku"
+                // User harus memilih "Adek ku" untuk melanjutkan
+            }
+        }
+        
+        // Fungsi efek ketikan
+        function typeWriter(element, text, buttonElement) {
+            let i = 0;
+            element.innerHTML = "";
+            let speed = 50; // kecepatan ketik (ms)
+            
+            function typing() {
+                if (i < text.length) {
+                    if (text.charAt(i) === '\n') {
+                        element.innerHTML += '<br>';
+                    } else {
+                        element.innerHTML += text.charAt(i);
+                    }
+                    i++;
+                    setTimeout(typing, speed);
+                } else if (buttonElement) {
+                    buttonElement.classList.remove('hidden');
+                }
+            }
+            
+            typing();
+        }
+        
+        // Fungsi buat confetti
+        function createConfetti() {
+            const colors = ['#ff69b4', '#ff1493', '#00ffff', '#ffff00', '#ff00ff', '#00ff00'];
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    confetti.style.animationDelay = Math.random() + 's';
+                    confetti.style.width = (Math.random() * 10 + 5) + 'px';
+                    confetti.style.height = confetti.style.width;
+                    document.body.appendChild(confetti);
+                    
+                    // Hapus confetti setelah selesai animasi
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }, Math.random() * 2000);
+            }
+        }
+        
+        // Fungsi buat bintang
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            starsContainer.innerHTML = '';
+            
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDelay = Math.random() * 2 + 's';
+                star.style.animationDuration = Math.random() * 3 + 1 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+    </script>
+</body>
+</html>
