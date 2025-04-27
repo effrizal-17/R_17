@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selamat Ulang Tahun!</title>
+    <title>R_17</title>
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -186,7 +186,6 @@
     <!-- Audio untuk lagu -->
     <audio id="lagu" loop>
         <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        <!-- Ganti dengan link lagu "I Like You The Most" -->
     </audio>
 
     <!-- Music control -->
@@ -196,7 +195,7 @@
 
     <!-- Tahap 1: Pilih Love -->
     <div class="container" id="stage1">
-        <h1>Sentuh semua LOVE nya!</h1>
+        <h1>Sentuh semua LOVE nya dulu yaa...</h1>
         <div class="love" id="love1" style="color: red;">❤️</div>
         <div class="love" id="love2" style="color: white;">🤍</div>
         <div class="love" id="love3" style="color: purple;">💜</div>
@@ -206,15 +205,15 @@
 
     <!-- Tahap 2: Masukkan Usia -->
     <div class="container hidden" id="stage2">
-        <h1>Usia kamu berapa nih sekarang?</h1>
+        <h1>Usia kamu berapa nih sekarang...?</h1>
         <input type="number" id="usia" min="1" max="120" placeholder="Masukkan usia kamu">
         <button class="btn" onclick="simpanUsia()">Submit</button>
-        <p id="errorStage2" class="error-message hidden">Masukkan usia yang valid ya antara 1-120</p>
+        <p id="errorStage2" class="error-message hidden">Masukkan usia antara 1-120</p>
     </div>
 
     <!-- Tahap 3: Masukkan Nama -->
     <div class="container hidden" id="stage3">
-        <h1>Aku boleh tau gak siapa nama kamu?</h1>
+        <h1>Aku boleh tau gak siapa nama kamu...? 🤔</h1>
         <input type="text" id="nama" placeholder="Masukkan nama kamu">
         <div style="margin-top: 20px;">
             <button class="btn btn-option" onclick="setNama(true)">Boleh</button>
@@ -232,12 +231,12 @@
 
     <!-- Tahap 5: Pilihan Adek/Mbak -->
     <div class="container hidden" id="stage5">
-        <h1>Kalau boleh tau, kamu itu siapa aku niihh? 😊</h1>
+        <h1>Kalau boleh tau, kamu itu siapa aku niihh...? 😊</h1>
         <div style="margin-top: 30px;">
             <button class="btn btn-option" onclick="setRelationship('adek')">Adek ku</button>
             <button class="btn btn-option no" onclick="setRelationship('mbak')">Mbak ku</button>
         </div>
-        <p id="pesanRelationship" class="error-message hidden">Harus mau dong jadi Adek ku, hehe 😘</p>
+        <p id="pesanRelationship" class="error-message hidden">Harus mau yaa jadi Adek ku, hehe 😅</p>
         <p id="errorStage5" class="error-message hidden">Pilih dulu ya!</p>
     </div>
 
@@ -351,7 +350,7 @@
             if (currentStage + 1 === 4) {
                 typeWriter(
                     document.getElementById('pesan1'),
-                    `hallooo ${nama}!\n\n Aku mau ngomong sesuatu nih...\n\n Boleh yaa,...?`,
+                    `hallooo ${nama}!👋🏻\n\n Aku mau ngomong sesuatu nih...\n\n Boleh yaa,...?`,
                     document.getElementById('lanjut4')
                 );
             }
@@ -360,7 +359,7 @@
             if (currentStage + 1 === 6) {
                 typeWriter(
                     document.getElementById('pesan2'),
-                    `Yeaayy!!\n\n Mulai sekarang, kamuuu adalah adekkuuu 😍🥰`,
+                    `Yeaayy...!!\n\n Mulai sekarang, kamuuu adalah adekkuuu...😊🫠`,
                     document.getElementById('lanjut6')
                 );
             }
@@ -369,7 +368,8 @@
             if (currentStage + 1 === 7) {
                 typeWriter(
                     document.getElementById('pesan3'),
-                    `Tambah dewasa aja nih Adekkuu...😊\n\n Semangat yaa tugasannya\n Jaga diri baik-baik yaa\n\n dan Jadilah adek ku yang baik 😘`,
+                    `${nama} apa kabar...?\n\n Tambah dewasa aja nih Adekkuu...😊\n\n Semangat yaa tugasannya
+                    dan Jaga diri baik-baik yaa 🥳`,
                     null
                 );
                 createConfetti();
