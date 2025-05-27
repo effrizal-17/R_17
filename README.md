@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R_17</title>
+    <title>Re_07</title>
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
-            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            background: linear-gradient(to bottom, #230c29, #302b63, #24243e);
             color: white;
             text-align: center;
             margin: 0;
@@ -177,22 +177,25 @@
             border-radius: 50%;
             z-index: 100;
         }
+        #youtube-player {
+            width: 1px;
+            height: 1px;
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: -1;
+        }
     </style>
 </head>
 <body>
     <!-- Background Stars -->
     <div class="stars" id="stars"></div>
-
-    <!-- Audio untuk lagu -->
-    <audio id="lagu" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    </audio>
-
+    <!-- YouTube Player -->
+    <div id="youtube-player"></div>
     <!-- Music control -->
     <div class="music-control">
         <button id="musicToggle" style="background:none; border:none; color:white; font-size:24px;">🔊</button>
     </div>
-
     <!-- Tahap 1: Pilih Love -->
     <div class="container" id="stage1">
         <h1>Sentuh semua LOVE nya dulu yaa...</h1>
@@ -200,17 +203,15 @@
         <div class="love" id="love2" style="color: white;">🤍</div>
         <div class="love" id="love3" style="color: purple;">💜</div>
         <button class="btn hidden" id="lanjutStage1" disabled onclick="nextStage(1)">Klik untuk lanjut...</button>
-        <p id="errorStage1" class="error-message hidden">Sentuh semua love dulu ya!</p>
+        <p id="errorStage1" class="error-message hidden">Sentuh semua love dulu yaa...!</p>
     </div>
-
     <!-- Tahap 2: Masukkan Usia -->
     <div class="container hidden" id="stage2">
         <h1>Usia kamu berapa nih sekarang...?</h1>
         <input type="number" id="usia" min="1" max="120" placeholder="Masukkan usia kamu">
         <button class="btn" onclick="simpanUsia()">Submit</button>
-        <p id="errorStage2" class="error-message hidden">Masukkan usia antara 1-120</p>
+        <p id="errorStage2" class="error-message hidden">Masukkan usia kamu sekarang</p>
     </div>
-
     <!-- Tahap 3: Masukkan Nama -->
     <div class="container hidden" id="stage3">
         <h1>Aku boleh tau gak siapa nama kamu...? 🤔</h1>
@@ -222,35 +223,34 @@
         <p id="pesanNama" class="error-message hidden">Harus boleh dong, wleee 😜</p>
         <p id="errorStage3" class="error-message hidden">Isi nama kamu dulu ya!</p>
     </div>
-
     <!-- Tahap 4: Pesan 1 -->
     <div class="container hidden" id="stage4">
         <div class="typing-text" id="pesan1"></div>
         <button class="btn hidden" id="lanjut4" onclick="nextStage(4)">Klik untuk lanjut...</button>
     </div>
-
     <!-- Tahap 5: Pilihan Adek/Mbak -->
     <div class="container hidden" id="stage5">
-        <h1>Kalau boleh tau, kamu itu siapa aku niihh...? 😊</h1>
+        <h1>Kalau boleh tau, kamu itu siapa aku niihh...? 😅</h1>
         <div style="margin-top: 30px;">
             <button class="btn btn-option" onclick="setRelationship('adek')">Adek ku</button>
             <button class="btn btn-option no" onclick="setRelationship('mbak')">Mbak ku</button>
         </div>
-        <p id="pesanRelationship" class="error-message hidden">Harus mau yaa jadi Adek ku, hehe 😅</p>
-        <p id="errorStage5" class="error-message hidden">Pilih dulu ya!</p>
+        <p id="pesanRelationship" class="error-message hidden">Harus mau ahh jadi Adek ku, hehe 😅</p>
+        <p id="errorStage5" class="error-message hidden">Pilih dulu yaa...!</p>
     </div>
-
     <!-- Tahap 6: Pesan 2 -->
     <div class="container hidden" id="stage6">
         <div class="typing-text" id="pesan2"></div>
         <button class="btn hidden" id="lanjut6" onclick="nextStage(6)">Klik untuk lanjut...</button>
     </div>
-
     <!-- Tahap 7: Pesan 3 -->
     <div class="container hidden" id="stage7">
         <div class="typing-text" id="pesan3"></div>
     </div>
-
+    
+    <!-- YouTube API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
     <script>
         // Variabel data
         let nama = "";
@@ -258,17 +258,57 @@
         let relationship = "adek";
         let clickedLoves = [false, false, false];
         let isMusicPlaying = true;
+        let player;
         
         // Inisialisasi bintang
         createStars();
         
-        // Mulai musik otomatis
-        document.addEventListener('DOMContentLoaded', function() {
+        // Fungsi YouTube API callback
+        function onYouTubeIframeAPIReady() {
+            // Inisialisasi player YouTube (tidak terlihat)
+            player = new YT.Player('youtube-player', {
+                height: '1',
+                width: '1',
+                videoId: 'eG9D_cT4t1o', // Ganti dengan ID video YouTube yang diinginkan
+                playerVars: {
+                    'autoplay': 0, // Mulai tidak autoplay karena sering dicegah browser
+                    'controls': 0,
+                    'showinfo': 0,
+                    'rel': 0,
+                    'iv_load_policy': 3, // Nonaktifkan overlay
+                    'playsinline': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+        
+        // Fungsi ketika player YouTube siap
+        function onPlayerReady(event) {
+            console.log("Player YouTube siap");
+            // Coba putar musik
+            tryPlayMusic();
+        }
+        
+        // Fungsi ketika status player berubah
+        function onPlayerStateChange(event) {
+            // Jika video sedang diputar
+            if (event.data == YT.PlayerState.PLAYING) {
+                console.log("Video sedang diputar");
+            } else if (event.data == YT.PlayerState.ENDED) {
+                // Jika video selesai, putar ulang
+                console.log("Video selesai, putar ulang");
+                player.playVideo();
+            }
+        }
+        
+        // Fungsi coba putar musik
+        function tryPlayMusic() {
             const audio = document.getElementById('lagu');
-            audio.volume = 0.3;
-            
             // Coba putar musik otomatis
-            const playPromise = audio.play();
+            const playPromise = player.playVideo();
             
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
@@ -278,19 +318,15 @@
                     updateMusicButton();
                 });
             }
-            
-            // Setup music toggle button
-            document.getElementById('musicToggle').addEventListener('click', toggleMusic);
-        });
-
+        }
+        
         // Fungsi toggle musik
         function toggleMusic() {
-            const audio = document.getElementById('lagu');
             if (isMusicPlaying) {
-                audio.pause();
+                player.pauseVideo();
                 isMusicPlaying = false;
             } else {
-                audio.play();
+                player.playVideo();
                 isMusicPlaying = true;
             }
             updateMusicButton();
@@ -301,7 +337,7 @@
             const btn = document.getElementById('musicToggle');
             btn.textContent = isMusicPlaying ? "🔊" : "🔇";
         }
-
+        
         // Inisialisasi love buttons
         document.getElementById('love1').addEventListener('click', function() {
             if (!clickedLoves[0]) {
@@ -359,7 +395,7 @@
             if (currentStage + 1 === 6) {
                 typeWriter(
                     document.getElementById('pesan2'),
-                    `Yeaayy...!!\n\n Mulai sekarang, kamuuu adalah adekkuuu...😊🫠`,
+                    `Yeaayy...!!\n\n Mulai sekarang, kamuuu adalah adekkuuu...🤗🫠`,
                     document.getElementById('lanjut6')
                 );
             }
@@ -368,8 +404,8 @@
             if (currentStage + 1 === 7) {
                 typeWriter(
                     document.getElementById('pesan3'),
-                    `${nama} apa kabar...?\n\n Tambah dewasa aja nih Adekkuu...😊\n\n Semangat yaa tugasannya
-                    dan Jaga diri baik-baik yaa 🥳`,
+                    `Apa kabar ${nama} 👋🏻...?\n\n Tambah dewasa aja nih Adekkuu...😊\n Semangat yaa tugasannya\n 
+                    Jaga kesehatannya dan Jaga diri baik-baik yaa...😉🥳`,
                     null
                 );
                 createConfetti();
@@ -426,7 +462,7 @@
             } else {
                 pesan.classList.remove('hidden');
                 // Tidak lanjut ke stage berikutnya jika memilih "Mbak ku"
-                // User harus memilih "Adek ku" untuk melanjutkan
+                // User memilih "Adek ku" untuk melanjutkan
             }
         }
         
@@ -493,6 +529,9 @@
                 starsContainer.appendChild(star);
             }
         }
+        
+        // Setup music toggle button
+        document.getElementById('musicToggle').addEventListener('click', toggleMusic);
     </script>
 </body>
 </html>
